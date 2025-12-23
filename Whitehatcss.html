@@ -1,0 +1,321 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MSU-SULU Whitehat Club Officers</title>
+
+<style>
+:root{
+  --green:#00c97a;
+  --dark:#0a1a14;
+  --light:#f4fff9;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:"Courier New",monospace;
+  color:#063;
+  background:linear-gradient(180deg,#eafff3,#c9f5e1);
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* BINARY BACKGROUND */
+body::before{
+  content:
+  "01010101010100101010100101010101001010101001010101001010101010101001
+   10100101010101010010101010010101010010101010101001010101010100101010
+   01010101001010101001010101010100101010101001010101010100101010101001";
+  position:fixed;
+  inset:0;
+  font-size:16px;
+  line-height:1.8;
+  color:rgba(0,160,90,.18);
+  white-space:pre-wrap;
+  z-index:-1;
+  animation:binaryMove 25s linear infinite;
+}
+
+@keyframes binaryMove{
+  from{transform:translateY(0)}
+  to{transform:translateY(-50%)}
+}
+
+/* HEADER */
+header{
+  text-align:center;
+  padding:30px;
+  background:rgba(255,255,255,.85);
+  border-bottom:2px solid var(--green);
+  box-shadow:0 8px 20px rgba(0,0,0,.15);
+}
+header h1{
+  margin:0;
+  color:#064;
+  text-shadow:0 0 10px rgba(0,200,120,.4);
+}
+header p{
+  margin-top:5px;
+  font-weight:bold;
+  color:#096;
+}
+
+/* CARDS */
+.container{
+  max-width:1200px;
+  margin:auto;
+  padding:35px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:25px;
+}
+
+.card{
+  background:rgba(255,255,255,.9);
+  border:1px solid var(--green);
+  border-radius:16px;
+  padding:22px;
+  text-align:center;
+  box-shadow:0 10px 25px rgba(0,0,0,.15);
+  cursor:pointer;
+  transition:.25s;
+}
+
+.card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 15px 30px rgba(0,200,120,.4);
+}
+
+.card img{
+  width:90px;height:90px;
+  border-radius:50%;
+  object-fit:cover;
+  border:3px solid var(--green);
+}
+
+.position{
+  font-weight:bold;
+  color:#075;
+}
+
+.term,.contact{
+  font-size:.85em;
+  color:#333;
+}
+
+/* BUTTON */
+button{
+  display:block;
+  margin:35px auto;
+  padding:14px 38px;
+  background:white;
+  color:#064;
+  border:2px solid var(--green);
+  border-radius:40px;
+  font-family:inherit;
+  font-weight:bold;
+  cursor:pointer;
+  box-shadow:0 8px 20px rgba(0,0,0,.15);
+}
+
+button:hover{
+  background:var(--green);
+  color:white;
+}
+
+/* MODALS */
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  justify-content:center;
+  align-items:center;
+  z-index:10;
+}
+
+.modal-content{
+  background:var(--light);
+  border:2px solid var(--green);
+  padding:25px;
+  width:90%;
+  max-width:420px;
+  border-radius:20px;
+  text-align:center;
+  box-shadow:0 20px 40px rgba(0,0,0,.35);
+  position:relative;
+}
+
+.close{
+  position:absolute;
+  top:10px;
+  right:15px;
+  font-size:1.2em;
+  cursor:pointer;
+}
+
+input,textarea{
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  background:white;
+  border:1px solid var(--green);
+  font-family:inherit;
+}
+
+textarea{resize:none}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>MSU-SULU Whitehat Club Officers</h1>
+  <p id="modeText">User Mode</p>
+</header>
+
+<div class="container" id="officersContainer"></div>
+
+<button id="adminBtn">Enter Admin Mode</button>
+
+<!-- PASSWORD MODAL -->
+<div class="modal" id="passwordModal">
+<div class="modal-content">
+<h3>ADMIN ACCESS</h3>
+<input type="password" id="adminPassword" placeholder="Enter password">
+<button onclick="checkPassword()">LOGIN</button>
+<button onclick="passwordModal.style.display='none'">CANCEL</button>
+</div>
+</div>
+
+<!-- VIEW MODAL -->
+<div class="modal" id="viewModal">
+<div class="modal-content">
+<span class="close" onclick="viewModal.style.display='none'">✖</span>
+<img id="vImg" style="width:100px;height:100px;border-radius:50%;border:3px solid var(--green);">
+<h3 id="vName"></h3>
+<p id="vPos"></p>
+<p id="vTerm"></p>
+<p id="vEmail"></p>
+<p id="vDesc"></p>
+</div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="modal" id="editModal">
+<div class="modal-content">
+<span class="close" onclick="editModal.style.display='none'">✖</span>
+<img id="eImg" style="width:100px;height:100px;border-radius:50%;border:3px solid var(--green);object-fit:cover;">
+<input type="file" id="imgUpload">
+<input id="eName" placeholder="Name">
+<input id="ePos" placeholder="Position">
+<input id="eTerm" placeholder="Term">
+<input id="eEmail" placeholder="Email">
+<textarea id="eDesc" placeholder="Role Description"></textarea>
+<button onclick="saveEdit()">SAVE</button>
+</div>
+</div>
+
+<script>
+let admin=false,currentIndex=0;
+
+const officers=[
+{name:"Rickymar Ajijul",position:"President",term:"2025-2026",email:"ajijul@gmail.com",desc:"Leads the club and oversees operations.",img:"https://via.placeholder.com/150"},
+{name:"Fairose Jamiruddin Aradais",position:"Training Coordinator",term:"2025-2026",email:"fairose@gmail.com",desc:"Organizes training programs.",img:"https://via.placeholder.com/150"},
+{name:"Aranan Al-jaber I.",position:"Event Coordinator",term:"2025-2026",email:"aranan@gmail.com",desc:"Plans club events.",img:"https://via.placeholder.com/150"},
+{name:"Almubarak Nur ana",position:"Membership Officer",term:"2025-2026",email:"almubarak@gmail.com",desc:"Handles membership records.",img:"https://via.placeholder.com/150"},
+{name:"Alnaiza Amilhamja",position:"Membership Officer",term:"2025-2026",email:"alnaiza@gmail.com",desc:"Supports member engagement.",img:"https://via.placeholder.com/150"},
+{name:"Radzner Amiladsan Sali",position:"Logistic Officer",term:"2025-2026",email:"radzner@gmail.com",desc:"Manages logistics.",img:"https://via.placeholder.com/150"},
+{name:"Almunier Rahimulla",position:"Logistic Officer",term:"2025-2026",email:"almunier@gmail.com",desc:"Supports logistics.",img:"https://via.placeholder.com/150"},
+{name:"Alhasheb A. Hadjimuddin",position:"P.R.O",term:"2025-2026",email:"alhasheb@gmail.com",desc:"Manages public relations.",img:"https://via.placeholder.com/150"},
+{name:"Rizal Hamsaji",position:"Auditor",term:"2025-2026",email:"rizal@gmail.com",desc:"Audits financial records.",img:"https://via.placeholder.com/150"}
+];
+
+const container=document.getElementById("officersContainer");
+const adminBtn=document.getElementById("adminBtn");
+const modeText=document.getElementById("modeText");
+
+function render(){
+ container.innerHTML="";
+ officers.forEach((o,i)=>{
+  const c=document.createElement("div");
+  c.className="card";
+  c.innerHTML=`
+   <img src="${o.img}">
+   <h3>${o.name}</h3>
+   <div class="position">${o.position}</div>
+   <div class="term">${o.term}</div>
+   <div class="contact">${o.email}</div>`;
+  c.onclick=()=>admin?openEdit(i):openView(i);
+  container.appendChild(c);
+ });
+}
+
+function openView(i){
+ const o=officers[i];
+ viewModal.style.display="flex";
+ vImg.src=o.img;
+ vName.textContent=o.name;
+ vPos.textContent=o.position;
+ vTerm.textContent="Term: "+o.term;
+ vEmail.textContent=o.email;
+ vDesc.textContent=o.desc;
+}
+
+function openEdit(i){
+ currentIndex=i;
+ const o=officers[i];
+ editModal.style.display="flex";
+ eImg.src=o.img;
+ eName.value=o.name;
+ ePos.value=o.position;
+ eTerm.value=o.term;
+ eEmail.value=o.email;
+ eDesc.value=o.desc;
+}
+
+function saveEdit(){
+ Object.assign(officers[currentIndex],{
+  name:eName.value,
+  position:ePos.value,
+  term:eTerm.value,
+  email:eEmail.value,
+  desc:eDesc.value
+ });
+ render();
+ editModal.style.display="none";
+}
+
+imgUpload.onchange=e=>{
+ const r=new FileReader();
+ r.onload=()=>{eImg.src=r.result;officers[currentIndex].img=r.result};
+ r.readAsDataURL(e.target.files[0]);
+};
+
+adminBtn.onclick=()=>{
+ if(!admin) passwordModal.style.display="flex";
+ else{
+  admin=false;
+  adminBtn.textContent="Enter Admin Mode";
+  modeText.textContent="User Mode";
+ }
+};
+
+function checkPassword(){
+ if(adminPassword.value==="Whitehat"){
+  admin=true;
+  adminBtn.textContent="Exit Admin Mode";
+  modeText.textContent="Admin Mode";
+  passwordModal.style.display="none";
+  adminPassword.value="";
+ }else alert("ACCESS DENIED");
+}
+
+render();
+</script>
+
+</body>
+</html>
